@@ -80,11 +80,11 @@
 		<div class="relative mx-auto flex w-1/2 items-center justify-center">
 			<div class="flex flex-col items-center gap-2">
 				{#if data?.dump?._data?.name}
-					<div in:fade={{ delay: 0, duration: 500 }} class="text-primary text-2xl font-bold">
+					<div in:fade={{ delay: 0, duration: 500 }} class="text-primary text-3xl font-bold">
 						{data?.dump?._data?.name}
 					</div>
 				{:else}
-					<div in:fade={{ delay: 0, duration: 500 }} class="text-primary text-2xl font-bold">
+					<div in:fade={{ delay: 0, duration: 500 }} class="text-primary text-3xl font-bold">
 						Robot
 					</div>
 				{/if}
