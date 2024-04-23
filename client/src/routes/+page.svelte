@@ -93,8 +93,9 @@
 				<!-- EASTER EGG 🐇🥚 -->
 
 				{#if data?.status === 'ROBOT_CLEAN'}
-					<div class="absolute top-28 -translate-y-2">
+					<div class="absolute top-28 -translate-y-8 sm:-translate-y-2">
 						<img
+							transition:fade={{ duration: 500 }}
 							src={kona}
 							alt="kitty"
 							class="animate-spin-slow h-32 w-32 rounded-full shadow-lg"
@@ -143,7 +144,14 @@
 			class="btn btn-primary flex w-full items-center justify-between gap-2"
 		>
 			<div>Clean</div>
-			<Icon icon="akar-icons:arrow-cycle" class="h-5 w-5" />
+			{#if data?.status === 'ROBOT_CLEAN'}
+				<div class="animate-spin-slow">
+					<Icon icon="akar-icons:arrow-cycle" class="h-5 w-5" />
+				</div>
+			{:else}
+				<Icon icon="akar-icons:arrow-cycle" class="h-5 w-5" />
+			{/if}
+			<!-- <Icon icon="akar-icons:arrow-cycle" class="h-5 w-5" /> -->
 		</button>
 		<div class="btn btn-primary flex w-full items-center justify-between gap-2">
 			<div>Light</div>
@@ -164,7 +172,7 @@
 			<div class="card-body w-72">
 				<div class="flex h-full items-center gap-5">
 					<div class="avatar">
-						<div class="border-primary w-16 rounded-full border shadow">
+						<div class="border-primary bg-primary w-16 rounded-full border shadow">
 							<img src={kona} alt="kitty" class="" />
 						</div>
 					</div>
