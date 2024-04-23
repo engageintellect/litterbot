@@ -5,6 +5,7 @@ from pylitterbot import Account
 import uvicorn
 
 load_dotenv()
+
 app = FastAPI()
 
 username = os.getenv("LITTERBOT_USERNAME")
