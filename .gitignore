@@ -9,3 +9,4 @@
 /client/vite.config.js.timestamp-*
 /client/vite.config.ts.timestamp-*
 /server/venv
+/server/__pycache__
