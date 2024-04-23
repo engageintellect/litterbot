@@ -1,0 +1,11 @@
+/client/.DS_Store
+/client/node_modules
+/client/build
+/client/.svelte-kit
+/client/package
+.env
+.env.*
+!.env.example
+/client/vite.config.js.timestamp-*
+/client/vite.config.ts.timestamp-*
+/server/venv
