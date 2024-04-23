@@ -34,8 +34,10 @@
 	};
 
 	let clean: any;
+	let isCleaning = false;
 
 	const startClean = async () => {
+		isCleaning = true;
 		const res = await fetch('/api/clean');
 		clean = await res.json();
 		console.log(clean);
@@ -141,29 +143,38 @@
 	<div class="my-10 grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-4">
 		<button
 			on:click={startClean}
-			class="btn btn-primary flex w-full items-center justify-between gap-2"
+			class="btn btn-primary btn-lg flex w-full items-center justify-between gap-2"
 		>
-			<div>Clean</div>
-			{#if data?.status === 'ROBOT_CLEAN'}
-				<div class="animate-spin-slow">
-					<Icon icon="akar-icons:arrow-cycle" class="h-5 w-5" />
-				</div>
+			{#if isCleaning}
+				<div>Starting...</div>
 			{:else}
-				<Icon icon="akar-icons:arrow-cycle" class="h-5 w-5" />
+				<div>Clean</div>
+			{/if}
+
+			{#if data?.status === 'ROBOT_CLEAN' ? () => (isCleaning = false) : () => (isCleaning = true)}
+				<!-- {isCleaning} -->
+
+				{#if data?.status === 'ROBOT_CLEAN'}
+					<div class="animate-spin-slow">
+						<Icon icon="akar-icons:arrow-cycle" class="h-7 w-7" />
+					</div>
+				{:else}
+					<Icon icon="akar-icons:arrow-cycle" class="h-7 w-7" />
+				{/if}
 			{/if}
 			<!-- <Icon icon="akar-icons:arrow-cycle" class="h-5 w-5" /> -->
 		</button>
-		<div class="btn btn-primary flex w-full items-center justify-between gap-2">
+		<div class="btn btn-primary btn-lg flex w-full items-center justify-between gap-2">
 			<div>Light</div>
-			<Icon icon="material-symbols:lightbulb-rounded" class="h-5 w-5" />
+			<Icon icon="material-symbols:lightbulb-rounded" class="h-7 w-7" />
 		</div>
-		<div class="btn btn-primary flex w-full items-center justify-between gap-2">
+		<div class="btn btn-primary btn-lg flex w-full items-center justify-between gap-2">
 			<div>Status</div>
-			<Icon icon="material-symbols:info" class="h-5 w-5" />
+			<Icon icon="material-symbols:info" class="h-7 w-7" />
 		</div>
-		<div class="btn btn-primary flex w-full items-center justify-between gap-2">
+		<div class="btn btn-primary btn-lg flex w-full items-center justify-between gap-2">
 			<div>Activity</div>
-			<Icon icon="tdesign:activity" class="h-5 w-5" />
+			<Icon icon="tdesign:activity" class="h-7 w-7" />
 		</div>
 	</div>
 
@@ -176,7 +187,9 @@
 							<img src={kona} alt="kitty" class="" />
 						</div>
 					</div>
-					<div class="card-title">I took 37 💩.</div>
+					<div class="card-title">
+						I took {data?.dump?._data?.DFINumberOfCycles} <span class="text-2xl">💩</span>.
+					</div>
 				</div>
 			</div>
 		</div>
