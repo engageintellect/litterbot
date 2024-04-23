@@ -4,7 +4,7 @@
 
 An app to interact with the "Litter Robot", by [Whisker](https://www.litter-robot.com/litter-robot-4.html).
 
-![Kitty Crapper](kitty-crapper.png)
+[![Kitty Crapper](kitty-crapper.png)](https://litterbot.vercel.app)
 
 This app uses Python and FastAPI (with Web Sockets) as a backend wrapper around [@natekspencer](https://github.com/natekspencer)'s [pylitterbot](https://github.com/natekspencer/pylitterbot) library. The frontend is built using [SvelteKit](https://kit.svelte.dev/), [TailwindCSS](https://tailwindcss.com), and [DaisyUI](https://daisyui.com).
 
