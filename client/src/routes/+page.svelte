@@ -2,35 +2,38 @@
 	import { fade, slide } from 'svelte/transition';
 	import kona from '$lib/assets/images/kona.png';
 	import whiskerImg from '$lib/assets/images/whisker.png';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import Icon from '@iconify/svelte';
 	import Stats from '$lib/components/Stats.svelte';
 
-	let dump: any;
-	let status: any;
-	let activity: any;
+	import { PUBLIC_WEB_SOCKET_URL } from '$env/static/public';
+
+	let ws: WebSocket;
+
+	type EndpointKey = 'dump' | 'robots' | 'status';
+
+	const endpoints: Record<EndpointKey, string> = {
+		dump: '/api/dump',
+		robots: '/api/robots',
+		status: '/api/status'
+	};
+
+	let data: Record<EndpointKey, any> = {
+		dump: null,
+		robots: null,
+		status: null
+	};
+
+	const fetchData = async (key: EndpointKey) => {
+		const res = await fetch(endpoints[key]);
+		data[key] = await res.json();
+	};
+
+	const fetchDataForAllKeys = () => {
+		Object.keys(endpoints).forEach((key) => fetchData(key as EndpointKey));
+	};
+
 	let clean: any;
-
-	const getDump = async () => {
-		const res = await fetch('/api/dump');
-		dump = await res.json();
-		console.log(dump);
-		return dump;
-	};
-
-	const getStatus = async () => {
-		const res = await fetch('/api/status');
-		status = await res.json();
-		console.log(status);
-		return status;
-	};
-
-	const getActivity = async () => {
-		const res = await fetch('/api/activity');
-		activity = await res.json();
-		console.log(activity);
-		return activity;
-	};
 
 	const startClean = async () => {
 		const res = await fetch('/api/clean');
@@ -40,19 +43,43 @@
 	};
 
 	onMount(() => {
-		getDump();
-		getStatus();
-		// getActivity();
+		fetchDataForAllKeys();
+
+		setTimeout(() => {
+			ws = new WebSocket(PUBLIC_WEB_SOCKET_URL);
+			ws.onmessage = (event) => {
+				const newData = JSON.parse(event.data);
+				Object.keys(newData).forEach((key) => {
+					data[key as keyof typeof data] = newData[key as keyof typeof newData];
+				});
+			};
+
+			ws.onerror = (error) => {
+				console.error('WebSocket error:', error);
+			};
+
+			ws.onclose = () => {
+				console.log('WebSocket connection closed');
+			};
+		}, 5000); // 5-second delay
+	});
+
+	onDestroy(() => {
+		if (ws) {
+			ws.close();
+		}
 	});
 </script>
+
+<!-- {JSON.stringify(data)} -->
 
 <div class="mx-auto w-full max-w-2xl px-2 py-10">
 	<div class=" flex w-full flex-col gap-5 md:flex-row">
 		<div class="relative mx-auto flex w-1/2 items-center justify-center">
 			<div class="flex flex-col items-center gap-2">
-				{#if dump?._data?.name}
+				{#if data?.dump?._data?.name}
 					<div in:fade={{ delay: 0, duration: 500 }} class="text-primary text-2xl font-bold">
-						{dump?._data?.name}
+						{data?.dump?._data?.name}
 					</div>
 				{:else}
 					<div in:fade={{ delay: 0, duration: 500 }} class="text-primary text-2xl font-bold">
@@ -61,7 +88,7 @@
 				{/if}
 				<img src={whiskerImg} alt="whisker" class="object-scale-down" />
 
-				{#if dump?._data?.isOnline}
+				{#if data?.dump?._data?.isOnline}
 					<div class="badge badge-lg bg-base-300 flex items-center gap-2 py-4">
 						<div class="bg-success h-5 w-5 rounded-full shadow-lg"></div>
 						<div>Online</div>
@@ -79,15 +106,17 @@
 			<div class="h-full w-full">
 				<Stats
 					data={{
-						status: status,
-						catWeight: dump?._data?.catWeight,
-						litterLevel: dump?._data?.DFILevelPercent + '%',
-						weightSensor: dump?._data?.weightSensor + ' lbs',
-						weightEnabled: dump?._data?.smartWeightEnabled
+						status: data?.status,
+						catWeight: data?.dump?._data?.catWeight,
+						litterLevel: data?.dump?._data?.DFILevelPercent + '%',
+						weightSensor: data?.dump?._data?.weightSensor + ' lbs',
+						weightEnabled: data?.dump?._data?.smartWeightEnabled
 							? 'Weight sensor is enabled'
 							: 'Weight sensor is disabled',
-						litterFull: dump?._data?.isDFIFull ? 'Litter box is full' : 'Litter box is not full',
-						catDetect: dump?._data?.catDetect
+						litterFull: data?.dump?._data?.isDFIFull
+							? 'Litter box is full'
+							: 'Litter box is not full',
+						catDetect: data?.dump?._data?.catDetect
 					}}
 				/>
 			</div>
@@ -141,8 +170,8 @@
 						</div>
 					</div>
 					<div class="card-title text-base">
-						{dump?._data?.scoopsSavedCount || 'loading...'} scoops saved since using {dump?._data
-							?.name}
+						{data?.dump?._data?.scoopsSavedCount || 'loading...'} scoops saved since using {data
+							?.dump?._data?.name}
 					</div>
 				</div>
 			</div>

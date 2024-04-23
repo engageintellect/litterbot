@@ -37,7 +37,7 @@
 			<div class="stat-value text-2xl">
 				{data.litterLevel}
 			</div>
-			<div class="stat-desc">{data.litterFull}</div>
+			<div class="stat-desc lowercase">{data.litterFull}</div>
 		{:else}
 			<div class="stat-value text-2xl">loading...</div>
 		{/if}
@@ -53,7 +53,7 @@
 			<div class="stat-value text-2xl">
 				{data.weightSensor}
 			</div>
-			<div class="stat-desc">{data.weightEnabled}</div>
+			<div class="stat-desc lowercase">{data.weightEnabled}</div>
 		{:else}
 			<div class="stat-value text-2xl">loading...</div>
 		{/if}
@@ -70,7 +70,7 @@
 			<div class="stat-value text-2xl">
 				{data.catWeight + ' lbs'}
 			</div>
-			<div class="stat-desc">{data.catDetect}</div>
+			<div class="stat-desc lowercase">{data.catDetect.replaceAll('_', ' ')}</div>
 		{:else}
 			<div class="stat-value text-2xl">loading...</div>
 		{/if}
