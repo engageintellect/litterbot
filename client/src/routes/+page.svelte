@@ -40,7 +40,7 @@
 		isCleaning = true;
 		const res = await fetch('/api/clean');
 		clean = await res.json();
-		console.log(clean);
+		// console.log(clean);
 		return clean;
 	};
 
@@ -145,22 +145,21 @@
 			on:click={startClean}
 			class="btn btn-primary btn-lg flex w-full items-center justify-between gap-2"
 		>
-			{#if isCleaning}
+			{#if isCleaning && data?.status !== 'ROBOT_CLEAN'}
 				<div>Starting...</div>
 			{:else}
 				<div>Clean</div>
 			{/if}
+			<!-- {/if} -->
 
-			{#if data?.status === 'ROBOT_CLEAN' ? () => (isCleaning = false) : () => (isCleaning = true)}
-				<!-- {isCleaning} -->
+			<!-- {isCleaning} -->
 
-				{#if data?.status === 'ROBOT_CLEAN'}
-					<div class="animate-spin-slow">
-						<Icon icon="akar-icons:arrow-cycle" class="h-7 w-7" />
-					</div>
-				{:else}
+			{#if data?.status === 'ROBOT_CLEAN' ? () => (isCleaning = false) : ''}
+				<div class="animate-spin-slow">
 					<Icon icon="akar-icons:arrow-cycle" class="h-7 w-7" />
-				{/if}
+				</div>
+			{:else}
+				<Icon icon="akar-icons:arrow-cycle" class="h-7 w-7" />
 			{/if}
 			<!-- <Icon icon="akar-icons:arrow-cycle" class="h-5 w-5" /> -->
 		</button>
@@ -250,3 +249,16 @@
 		<div class="loading loading-lg"></div>
 	{/if} -->
 </div>
+
+<!-- {#if data?.activity}
+	{#each data?.activity as act}
+		<div class="card">
+			<div class="card-body">
+				{act.timestamp}
+				{act.action}
+			</div>
+		</div>
+	{/each}
+{:else}
+	<div class="loading loading-lg"></div>
+{/if} -->

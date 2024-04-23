@@ -32,7 +32,7 @@
 		</div>
 		<!-- <div class="stat-desc">↗︎ 400 (22%)</div> -->
 
-		<div class="stat-title">Litter Level</div>
+		<div class="stat-title">Waste Level</div>
 		{#if data.status}
 			<div class="stat-value text-2xl">
 				{data.litterLevel}
