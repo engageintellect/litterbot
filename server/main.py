@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from pylitterbot import Account
 import uvicorn
 
+
 load_dotenv()
 
 app = FastAPI()
