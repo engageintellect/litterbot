@@ -4,8 +4,11 @@
 	export let data = {
 		status: 'loading...',
 		catWeight: 'fetching weight...',
+		catDetect: 'detecting cat...',
 		litterLevel: 'calculating litter level...',
-		weightSensor: 'checking weight sensor...'
+		weightSensor: 'checking weight sensor...',
+		weightEnabled: 'checking weight sensor...',
+		litterFull: 'calculating litter level...'
 	};
 </script>
 
@@ -34,6 +37,7 @@
 			<div class="stat-value text-2xl">
 				{data.litterLevel}
 			</div>
+			<div class="stat-desc">{data.litterFull}</div>
 		{:else}
 			<div class="stat-value text-2xl">loading...</div>
 		{/if}
@@ -43,13 +47,13 @@
 		<div class="stat-figure text-primary">
 			<Icon icon="material-symbols:scale" class="h-10 w-10" />
 		</div>
-		<!-- <div class="stat-desc">↘︎ 90 (14%)</div> -->
 
 		<div class="stat-title">Weight Sensor</div>
 		{#if data.status}
 			<div class="stat-value text-2xl">
 				{data.weightSensor}
 			</div>
+			<div class="stat-desc">{data.weightEnabled}</div>
 		{:else}
 			<div class="stat-value text-2xl">loading...</div>
 		{/if}
@@ -66,6 +70,7 @@
 			<div class="stat-value text-2xl">
 				{data.catWeight + ' lbs'}
 			</div>
+			<div class="stat-desc">{data.catDetect}</div>
 		{:else}
 			<div class="stat-value text-2xl">loading...</div>
 		{/if}

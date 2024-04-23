@@ -3,13 +3,13 @@
 	import kona from '$lib/assets/images/kona.png';
 	import whiskerImg from '$lib/assets/images/whisker.png';
 	import { onMount } from 'svelte';
-	import Table from '$lib/components/Table.svelte';
 	import Icon from '@iconify/svelte';
 	import Stats from '$lib/components/Stats.svelte';
 
 	let dump: any;
 	let status: any;
 	let activity: any;
+	let clean: any;
 
 	const getDump = async () => {
 		const res = await fetch('/api/dump');
@@ -32,14 +32,19 @@
 		return activity;
 	};
 
+	const startClean = async () => {
+		const res = await fetch('/api/clean');
+		clean = await res.json();
+		console.log(clean);
+		return clean;
+	};
+
 	onMount(() => {
 		getDump();
 		getStatus();
 		// getActivity();
 	});
 </script>
-
-<!-- {JSON.stringify(dump, null, 2 || 'loading...')} -->
 
 <div class="mx-auto w-full max-w-2xl px-2 py-10">
 	<div class=" flex w-full flex-col gap-5 md:flex-row">
@@ -70,15 +75,6 @@
 			</div>
 		</div>
 
-		<!-- <Table
-			data={{
-				status: status,
-				catWeight: dump?._data?.catWeight,
-				litterLevel: dump?._data?.litterLevel,
-				weightSensor: dump?._data?.weightSensor,
-			}}	
-		 /> -->
-
 		<div class="card flex w-full flex-col gap-2">
 			<div class="h-full w-full">
 				<Stats
@@ -86,7 +82,12 @@
 						status: status,
 						catWeight: dump?._data?.catWeight,
 						litterLevel: dump?._data?.DFILevelPercent + '%',
-						weightSensor: dump?._data?.weightSensor
+						weightSensor: dump?._data?.weightSensor + ' lbs',
+						weightEnabled: dump?._data?.smartWeightEnabled
+							? 'Weight sensor is enabled'
+							: 'Weight sensor is disabled',
+						litterFull: dump?._data?.isDFIFull ? 'Litter box is full' : 'Litter box is not full',
+						catDetect: dump?._data?.catDetect
 					}}
 				/>
 			</div>
@@ -95,10 +96,13 @@
 
 	<!-- <h1 class="text-primary py-2 text-2xl font-thin">Actions</h1> -->
 	<div class="my-10 grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-4">
-		<div class="btn btn-primary flex w-full items-center justify-between gap-2">
+		<button
+			on:click={startClean}
+			class="btn btn-primary flex w-full items-center justify-between gap-2"
+		>
 			<div>Clean</div>
 			<Icon icon="akar-icons:arrow-cycle" class="h-5 w-5" />
-		</div>
+		</button>
 		<div class="btn btn-primary flex w-full items-center justify-between gap-2">
 			<div>Light</div>
 			<Icon icon="material-symbols:lightbulb-rounded" class="h-5 w-5" />
