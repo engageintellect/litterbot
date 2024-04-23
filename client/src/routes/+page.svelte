@@ -86,8 +86,21 @@
 						Robot
 					</div>
 				{/if}
-				<img src={whiskerImg} alt="whisker" class="object-scale-down" />
+				<div class="relative">
+					<img src={whiskerImg} alt="whisker" class="object-scale-down" />
+				</div>
 
+				<!-- EASTER EGG 🐇🥚 -->
+
+				{#if data?.status === 'ROBOT_CLEAN'}
+					<div class="absolute top-28 -translate-y-2">
+						<img
+							src={kona}
+							alt="kitty"
+							class="animate-spin-slow h-32 w-32 rounded-full shadow-lg"
+						/>
+					</div>
+				{/if}
 				{#if data?.dump?._data?.isOnline}
 					<div class="badge badge-lg bg-base-300 flex items-center gap-2 py-4">
 						<div class="bg-success h-5 w-5 rounded-full shadow-lg"></div>

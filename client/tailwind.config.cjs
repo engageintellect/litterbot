@@ -3,7 +3,11 @@ const config = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 
 	theme: {
-		extend: {}
+		extend: {
+			animation: {
+        'spin-slow': 'spin 5s linear infinite',
+      }
+		}
 	},
 
 	daisyui: {
