@@ -146,7 +146,7 @@
 			class="btn btn-primary btn-lg flex w-full items-center justify-between gap-2"
 		>
 			{#if isCleaning && data?.status !== 'ROBOT_CLEAN'}
-				<div>Starting...</div>
+				<div>Starting</div>
 			{:else}
 				<div>Clean</div>
 			{/if}

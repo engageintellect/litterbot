@@ -19,7 +19,9 @@
 		</div>
 		<div class="stat-title">Status</div>
 		{#if data.status}
-			<div class="stat-value text-2xl">{data.status}</div>
+			<div class="stat-value text-2xl capitalize">
+				{data.status.replace('_', ' ').toLocaleLowerCase()}
+			</div>
 		{:else}
 			<div class="stat-value text-2xl">loading...</div>
 		{/if}
