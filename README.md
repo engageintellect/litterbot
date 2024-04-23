@@ -23,9 +23,13 @@ cd litterbot
 cp /server/.env.example /server/.env
 ```
 
+**Note:** You will need to get your Litter Robot's username and password credentials from the Whisker app.
+
 ```bash
 cp /client/.env.example /client/.env
 ```
+
+**Note:** Be sure to update the example values with your own.
 
 ### Server
 
