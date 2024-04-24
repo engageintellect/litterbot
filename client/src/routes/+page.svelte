@@ -104,13 +104,20 @@
 						/>
 					</div>
 				{/if}
+
 				{#if data?.dump?._data?.isOnline}
-					<div class="badge badge-lg bg-base-300 flex items-center gap-2 py-4">
+					<div
+						in:fade={{ delay: 0, duration: 500 }}
+						class="badge badge-lg bg-base-300 flex items-center gap-2 py-4"
+					>
 						<div class="bg-success h-5 w-5 rounded-full shadow-lg"></div>
 						<div>Online</div>
 					</div>
 				{:else}
-					<div class="badge badge-lg bg-base-300 flex items-center gap-2 py-4">
+					<div
+						in:fade={{ delay: 0, duration: 500 }}
+						class="badge badge-lg bg-base-300 flex items-center gap-2 py-4"
+					>
 						<div class="bg-error h-5 w-5 rounded-full shadow-lg"></div>
 						<div>Offline</div>
 					</div>
@@ -179,48 +186,68 @@
 
 	<div class="my-10 flex w-full snap-x snap-mandatory gap-2 overflow-x-auto">
 		<div class="card bg-base-300 snap-center">
-			<div class="card-body w-full min-w-72">
-				<div class="flex h-full items-center gap-5">
-					<div class="avatar">
-						<div class="border-primary bg-primary w-16 rounded-full border shadow">
-							<img src={kona} alt="kitty" class="" />
+			<div class="card-body w-full min-w-72 p-4">
+				<div class="flex h-full items-start gap-2">
+					{#if data?.dump?._data?.DFINumberOfCycles}
+						<div class="avatar">
+							<div class="border-primary bg-primary w-12 rounded-full border shadow">
+								<img src={kona} alt="kitty" class="" />
+							</div>
 						</div>
-					</div>
-					<div class="card-title">
-						I took {data?.dump?._data?.DFINumberOfCycles} <span class="text-2xl">💩</span>.
-					</div>
+						<div class="card-title">
+							I took <span class="text-primary text-2xl"
+								>{data?.dump?._data?.DFINumberOfCycles}</span
+							> 💩.
+						</div>
+					{:else}
+						<div class="text-primary text-2xl font-bold">loading...</div>
+					{/if}
 				</div>
 			</div>
 		</div>
 
 		<div class="card bg-base-300 snap-center">
-			<div class="card-body h-full min-w-72">
-				<div class="flex h-full items-center gap-5">
+			<div class="card-body h-full min-w-72 p-4">
+				<div class="flex h-full items-start gap-5">
 					<!-- <div class="avatar"> -->
 					<!-- <div class="border-primary w-16"> -->
 					<!-- <img src={kona} alt="kitty" class="" /> -->
 					<!-- <Icon icon="tabler:shovel" class="text-primary h-full w-full" /> -->
 					<!-- </div> -->
 					<!-- </div> -->
-					<div class="card-title text-base">
-						<div>
-							<span class="text-primary text-2xl font-bold"
-								>{data?.dump?._data?.scoopsSavedCount || 'loading...'}</span
-							>
-							scoops saved since using {data?.dump?._data?.name}
+					{#if data?.dump?._data?.scoopsSavedCount}
+						<div class="card-title text-base">
+							<div>
+								<span class="text-primary text-2xl font-bold"
+									>{data?.dump?._data?.scoopsSavedCount || 'loading...'}</span
+								>
+								scoops saved since using {data?.dump?._data?.name}
+							</div>
 						</div>
-					</div>
+					{:else}
+						<div class="text-primary text-2xl font-bold">loading...</div>
+					{/if}
 				</div>
 			</div>
 		</div>
 
 		<div class="card bg-base-100 image-full snap-center shadow-xl">
-			<figure class="bg-primary h-full">
-				<img src={whiskerImg} alt="Shoes" class="max-h-40 object-cover" />
+			<figure class="bg-primary/50 h-full">
+				<img src={whiskerImg} alt="device" class=" max-h-40 scale-150 object-cover" />
 			</figure>
-			<div class="card-body w-full min-w-72">
-				<h2 class="card-title">Shoes!</h2>
-				<p>If a dog chews shoes whose shoes does he choose?</p>
+			<div class="card-body w-full min-w-72 p-4 drop-shadow">
+				<h2 class="card-title">Device</h2>
+				<div class="flex flex-col gap-0 text-nowrap">
+					<div class="">
+						ESP Firmware: {data?.dump?._data?.espFirmware || 'loading...'}
+					</div>
+					<div class="">
+						Pic Firmware: {data?.dump?._data?.picFirmwareVersion || 'loading...'}
+					</div>
+					<div class="">
+						Laser Board Firmware: {data?.dump?._data?.laserBoardFirmwareVersion || 'loading...'}
+					</div>
+				</div>
 				<!-- <div class="card-actions justify-end"> -->
 				<!-- <button class="btn btn-primary">Buy Now</button> -->
 				<!-- </div> -->
@@ -228,10 +255,64 @@
 		</div>
 
 		<div class="card bg-primary text-primary-content snap-center">
-			<div class="card-body w-full min-w-72">
+			<div class="card-body w-full min-w-72 p-4">
 				<div class="flex h-full flex-col items-start gap-2">
-					<h2 class="card-title">Card title!</h2>
-					<p>If a dog chews shoes whose shoes does he choose?</p>
+					<h2 class="card-title">Sensors</h2>
+
+					<div class="w-full overflow-x-auto">
+						<table class="table-xs table w-full">
+							<!-- head -->
+							<tbody>
+								<!-- row 1 -->
+								<tr>
+									<td>Power</td>
+									<td>
+										{data?.dump?._data?.unitPowerStatus.replaceAll('_', ' ').toLowerCase()}
+									</td>
+								</tr>
+								<!-- row 2 -->
+								<tr>
+									<td>Motor</td>
+									<td>
+										{data?.dump?._data?.globeMotorFaultStatus.replaceAll('_', ' ').toLowerCase()}
+									</td>
+								</tr>
+								<!-- row 3 -->
+								<tr>
+									<td>Pinch</td>
+									<td>{data?.dump?._data?.pinchStatus.replaceAll('_', ' ').toLowerCase()}</td>
+								</tr>
+
+								<tr>
+									<td>Pinch</td>
+									<td>{data?.dump?._data?.pinchStatus.replaceAll('_', ' ').toLowerCase()}</td>
+								</tr>
+
+								<tr>
+									<td>Cat Detection</td>
+									<td>
+										{data?.dump?._data?.catDetect.replaceAll('_', ' ').toLowerCase()}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!-- <div class="flex flex-col gap-0 text-nowrap">
+						<div>
+							Power: {data?.dump?._data?.unitPowerStatus.replaceAll('_', ' ').toLowerCase()}
+						</div>
+						<div>
+							Motor: {data?.dump?._data?.globeMotorFaultStatus.replaceAll('_', ' ').toLowerCase()}
+						</div>
+						<div>Pinch: {data?.dump?._data?.pinchStatus.replaceAll('_', ' ').toLowerCase()}</div>
+						<div>
+							Cat Detection: {data?.dump?._data?.catDetect.replaceAll('_', ' ').toLowerCase()}
+						</div>
+						<div>
+							Laser Status: {data?.dump?._data?.isLaserDirty ? 'DIRTY' : 'CLEAN'}
+						</div>
+					</div> -->
+
 					<!-- <div class="card-actions justify-end"> -->
 					<!-- <button class="btn">Buy Now</button> -->
 					<!-- </div> -->
