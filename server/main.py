@@ -48,67 +48,72 @@ async def get_refresh():
 
 @app.get("/api/robots")
 async def get_robots():
+    if not await account.robots:
+        return {"error": "No robots available"}
     return [str(robot) for robot in account.robots]
 
 @app.get("/api/dump")
 async def get_dump():
+    if not account.robots:
+        raise HTTPException(status_code=404, detail="No robots available")
     return account.robots[0].__dict__
 
 @app.get("/api/activity")
 async def get_activity():
+    if not account.robots:
+        raise HTTPException(status_code=404, detail="No robots available")
     return await account.robots[0].get_activity_history()
 
 @app.get("/api/status")
 async def get_status():
+    if not account.robots:
+        raise HTTPException(status_code=404, detail="No robots available")
     return account.robots[0].__dict__['_data']['robotStatus']
 
 @app.get("/api/clean")
 async def start_cleaning():
+    if not account.robots:
+        raise HTTPException(status_code=404, detail="No robots available")
     await account.robots[0].start_cleaning()
     status = account.robots[0].__dict__['_data']['robotStatus']
     return {"msg": "Cleaning started...", "robot": str(account.robots[0]), "status": status}
 
 @app.get("/api/lightOn")
 async def light_on():
+    if not account.robots:
+        raise HTTPException(status_code=404, detail="No robots available")
     return await account.robots[0].set_night_light(True)
 
 @app.get("/api/lightOff")
 async def light_off():
+    if not account.robots:
+        raise HTTPException(status_code=404, detail="No robots available")
     return await account.robots[0].set_night_light(False)
 
-
+# Adjusting the WebSocket endpoint to handle multiple robots
 @app.websocket("/api/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     print(f"WebSocket connection established with: {websocket.client}")
     try:
         while True:
-            # Refresh or reconnect account to ensure fresh data
             await disconnect_account()  # Ensure it's disconnected first to avoid issues
             await connect_account()  # Reconnect to fetch fresh data
             
-            # Serialize robots data
-            robots_data = [{key: str(value) for key, value in robot.__dict__.items()} for robot in account.robots]
-            
-            # Serialize dump data; assuming robots[0] exists and checking its data type before serializing
-            dump_data = {}
-            if account.robots:
-                robot = account.robots[0]
-                for key, value in robot.__dict__.items():
-                    if isinstance(value, (dict, list, str, int, float, bool, type(None))):
-                        dump_data[key] = value
-                    else:
-                        dump_data[key] = str(value)
-
-            # Assuming status is already being sent properly as a simpler dict or string
-            status_data = account.robots[0].__dict__['_data']['robotStatus'] if account.robots else {}
-
-            data = {
-                "robots": robots_data,
-                "dump": dump_data,
-                "status": status_data,
-            }
-            await websocket.send_json(data)
+            if not account.robots:
+                await websocket.send_json({"error": "No robots available"})
+            else:
+                robots_data = [{key: str(value) for key, value in robot.__dict__.items()} for robot in account.robots]
+                robot = account.robots[0]  # Using the first robot for detailed data
+                dump_data = {key: (value if isinstance(value, (dict, list, str, int, float, bool, type(None))) else str(value)) for key, value in robot.__dict__.items()}
+                status_data = robot.__dict__['_data']['robotStatus']
+                
+                data = {
+                    "robots": robots_data,
+                    "dump": dump_data,
+                    "status": status_data,
+                }
+                await websocket.send_json(data)
             await asyncio.sleep(5)  # Send updated data every 5 seconds
     except Exception as e:
         print(f"WebSocket connection error: {e}")
@@ -116,9 +121,6 @@ async def websocket_endpoint(websocket: WebSocket):
         print(f"WebSocket connection closed with: {websocket.client}")
 
 
-
-
 # Main entry point for running the application directly
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=4323, reload=True)

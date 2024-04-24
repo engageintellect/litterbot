@@ -111,8 +111,8 @@
 					</div>
 				{:else}
 					<div class="badge badge-lg bg-base-300 flex items-center gap-2 py-4">
-						<div class="loading loading-spinner loading-sm"></div>
-						<div>Loading...</div>
+						<div class="bg-error h-5 w-5 rounded-full shadow-lg"></div>
+						<div>Offline</div>
 					</div>
 				{/if}
 			</div>
@@ -179,7 +179,7 @@
 
 	<div class="my-10 flex w-full snap-x snap-mandatory gap-2 overflow-x-auto">
 		<div class="card bg-base-300 snap-center">
-			<div class="card-body w-72">
+			<div class="card-body w-full min-w-72">
 				<div class="flex h-full items-center gap-5">
 					<div class="avatar">
 						<div class="border-primary bg-primary w-16 rounded-full border shadow">
@@ -194,17 +194,21 @@
 		</div>
 
 		<div class="card bg-base-300 snap-center">
-			<div class="card-body w-72">
+			<div class="card-body h-full min-w-72">
 				<div class="flex h-full items-center gap-5">
-					<div class="avatar">
-						<div class="border-primary w-16">
-							<!-- <img src={kona} alt="kitty" class="" /> -->
-							<Icon icon="tabler:shovel" class="text-primary h-full w-full" />
-						</div>
-					</div>
+					<!-- <div class="avatar"> -->
+					<!-- <div class="border-primary w-16"> -->
+					<!-- <img src={kona} alt="kitty" class="" /> -->
+					<!-- <Icon icon="tabler:shovel" class="text-primary h-full w-full" /> -->
+					<!-- </div> -->
+					<!-- </div> -->
 					<div class="card-title text-base">
-						{data?.dump?._data?.scoopsSavedCount || 'loading...'} scoops saved since using {data
-							?.dump?._data?.name}
+						<div>
+							<span class="text-primary text-2xl font-bold"
+								>{data?.dump?._data?.scoopsSavedCount || 'loading...'}</span
+							>
+							scoops saved since using {data?.dump?._data?.name}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -214,7 +218,7 @@
 			<figure class="bg-primary h-full">
 				<img src={whiskerImg} alt="Shoes" class="max-h-40 object-cover" />
 			</figure>
-			<div class="card-body w-72">
+			<div class="card-body w-full min-w-72">
 				<h2 class="card-title">Shoes!</h2>
 				<p>If a dog chews shoes whose shoes does he choose?</p>
 				<!-- <div class="card-actions justify-end"> -->
@@ -224,7 +228,7 @@
 		</div>
 
 		<div class="card bg-primary text-primary-content snap-center">
-			<div class="card-body w-72">
+			<div class="card-body w-full min-w-72">
 				<div class="flex h-full flex-col items-start gap-2">
 					<h2 class="card-title">Card title!</h2>
 					<p>If a dog chews shoes whose shoes does he choose?</p>
